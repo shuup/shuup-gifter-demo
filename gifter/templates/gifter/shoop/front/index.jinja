@@ -1,0 +1,114 @@
+{% extends "shoop/front/base.jinja" %}
+{% block content_title %}{% endblock %}
+{% block page_class %}frontpage{% endblock %}
+
+{% block content_full %}
+    <div class="frontpage-row">
+        <div class="col-md-6">
+            <div class="block color-gray">
+                <div class="block-bg"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h1>{% trans %}Welcome to gifter!{% endtrans %}</h1>
+                        <p>{% trans %}We've put the magic and excitement back into business gifts with the most comprehensive range of beautiful, cool and inspirational products online. We promise the product will meet your expectations or we’ll rerun your order or refund your money - your choice.{% endtrans %}</p>
+                        <a href="{{ url('shoop:xtheme_extra_view', view='products') }}" class="btn btn-primary">{% trans %}Browse our products{% endtrans %}</a>
+                    </div>
+                </div>
+            </div>
+            {# TODO: Find a more stable way to link to products than by id #}
+            <a href="/p/10-" class="block half image">
+                <div class="block-bg" style="background-image: url({{ STATIC_URL }}gifter/img/stock/1.jpg)"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h2>{% trans %}Customer gifts{% endtrans %}</h2>
+                        <p>{% trans %}Make an impression with stylish high-quality gifts!{% endtrans %}</p>
+                    </div>
+                </div>
+            </a>
+            <div class="block half color-white">
+                <div class="block-bg"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h2>{% trans %}Goods for your company{% endtrans %}</h2>
+                        <p>{% trans %}Motivate your employees with elegant personalized accessories.{% endtrans %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            {# TODO: Find a more stable way to link to products than by id #}
+            <a href="/p/11-" class="block double-height image">
+                <div class="block-bg" style="background-image: url({{ STATIC_URL }}gifter/img/stock/2.jpg)"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h2>{% trans %}White canvas awaits!{% endtrans %}</h2>
+                        <p>{% trans %}Notes, doodles and reflections – capture it all inside the covers of our beautiful notebooks and journals. Whether your writing is personal or professional, these journals and notebooks help you get out your thoughts!{% endtrans %}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="frontpage-row">
+        <div class="col-md-4">
+            {# TODO: Find a more stable way to link to products than by id #}
+            <a href="/p/5-" class="block image">
+                <div class="block-bg" style="background-image: url({{ STATIC_URL }}gifter/img/stock/3.jpg)"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h2>{% trans %}Delightful coffee breaks{% endtrans %}</h2>
+                        <p>{% trans %}Energize your morning with your favorite coffee from your favorite cup. Test the waters with the many colors, shapes and styles we have available.{% endtrans %}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            {# TODO: Find a more stable way to link to products than by id #}
+            <a href="/p/14-" class="block image">
+                <div class="block-bg" style="background-image: url({{ STATIC_URL }}gifter/img/stock/4.jpg)"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h2>{% trans %}Organize your thoughts{% endtrans %}</h2>
+                        <p>{% trans %}Where would we be without notepads and flags? No desk is complete without a solid supply of notepads and cubes.{% endtrans %}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <div class="block color-white">
+                <div class="block-bg"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h2>{% trans %}Order easily for your company{% endtrans %}</h2>
+                        <p>{% trans %}Free samples, free art assistance and lightning-fast service from people who care make ordering easy.{% endtrans %}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="frontpage-row">
+        <div class="col-md-6">
+            {# TODO: Find a more stable way to link to products than by id #}
+            <a href="/p/19-" class="block image">
+                <div class="block-bg" style="background-image: url({{ STATIC_URL }}gifter/img/stock/5.jpg)"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h2>{% trans %}Rainy day savior!{% endtrans %}</h2>
+                        <p>{% trans %}Cause a whirlwind with our astonishing premium quality umbrellas! These beautiful products provide shelter from feisty weather conditions or the hot summer sun.{% endtrans %}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6">
+            {# TODO: Find a more stable way to link to products than by id #}
+            <a href="/p/4-" class="block image">
+                <div class="block-bg" style="background-image: url({{ STATIC_URL }}gifter/img/stock/6.jpg)"></div>
+                <div class="block-text">
+                    <div class="text-wrap">
+                        <h2>{% trans %}Gourmet moments{% endtrans %}</h2>
+                        <p>{% trans %}We have so many beautiful gifts for cooks, you won't know where to get started! But don't worry, we'll help you find the present that's right for your kitchen-lover. Equip their kitchen for all kinds of culinary endeavors with promotional cooking tools and utensils.{% endtrans %}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "shoop/front/base.jinja" %}
+{% from "shoop/front/macros.jinja" import render_field with context %}
+
+{% block title %}{% trans %}Log in{% endtrans %}{% endblock %}
+{% block content_title %}{% endblock %}
+
+{% block content %}
+
+    {% for error in form.non_field_errors() %}
+        {{ macros.alert(error, mode="danger") }}
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-sm-8 col-sm-push-2 col-md-6 col-md-push-3">
+            <h1 class="page-header text-center">
+                {% trans %}Log in{% endtrans %}
+            </h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-sm-push-2 col-md-6 col-md-push-3">
+
+            {% if get_demo_credentials() %}
+                <div class="alert alert-success">
+                    {% trans %}You can use{% endtrans %} <b>{{ get_demo_credentials() }}</b> {% trans %}to log in.{% endtrans %}
+                </div>
+            {% endif %}
+
+            <div class="well">
+                <form role="form" method="post" action="{{ request.path }}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next|default("") }}">
+                    {{ render_field(form.username) }}
+                    {{ render_field(form.password) }}
+                    <hr>
+                    <button type="submit" class="btn btn-primary btn-block btn-lg"><i class="glyphicon glyphicon-log-in"></i> {% trans %}Log in{% endtrans %}</button>
+                </form>
+            </div>
+            <p class="text-center">
+                <a href="{{ url("shoop:recover_password") }}"><i class="fa fa-question"></i> {% trans %}Forgot your password?{% endtrans %}</a>
+            </p>
+            <p class="text-center">
+                <a href="{{ url("shoop:registration_register") }}"><i class="fa fa-pencil"></i> {% trans %}Need to register?{% endtrans %}</a>
+            </p>
+        </div>
+    </div>
+
+{% endblock %}

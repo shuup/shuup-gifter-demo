@@ -1,0 +1,82 @@
+{%- import "shoop/front/macros.jinja" as macros with context -%}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gifter &ndash; {% block title %}Business gifts for every need!{% endblock %}</title>
+    {% block extrameta %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ static("gifter/img/favicon.ico") }}">
+    <link href="//fonts.googleapis.com/css?family=Yantramanav:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{{ static("gifter/css/style.css") }}">
+</head>
+<body class="b2b-demo {% block extra_body_class %}{% endblock %}">
+
+    {% include "shoop/front/includes/_side_nav.jinja" %}
+
+    <div class="content-wrap">
+
+        {% include "shoop/front/includes/_top_nav.jinja" %}
+
+        <main class="main-content {% block page_class %}{% endblock %}" role="main">
+            {% block hero %}{% endblock %}
+
+            {% block hero_addition %}{% endblock %}
+
+            {% if self.breadcrumb() %}
+                <div class="container-fluid breadcrumb-wrap">
+                    {% block breadcrumb %}{% endblock %}
+                </div>
+            {% endif %}
+
+            {% if messages %}
+                <section class="messages">
+                    <div class="container-fluid">
+                        {% for message in messages %}
+                            <div class="alert alert-dismissable alert-{{ message.tags }}">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if self.content_title() %}
+                <div class="container">
+                    <div class="page-header">
+                        <h1>{% block content_title %}{% endblock %}</h1>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if self.checkout_phase_bar() %}
+                <div class="container">
+                    {% block checkout_phase_bar %}{% endblock %}
+                </div>
+            {% endif %}
+
+            {% if self.content() %}
+                <div class="container">
+                    {% block content %}{% endblock %}
+                </div>
+            {% endif %}
+
+            {% if self.content_full() %}
+                {% block content_full %}{% endblock %}
+            {% endif %}
+
+        </main>
+
+        {% include "shoop/front/includes/_footer.jinja" %}
+
+        {% block cover_message %}{% endblock %}
+
+    </div>
+
+    <script src="{{ STATIC_URL }}gifter/js/gifter.js"></script>
+    {% block extrajs %}{% endblock %}
+    {# Enable adding products to basket with ajax #}
+    {% include "gifter/add_product_to_basket.jinja" %}
+</body>
+</html>

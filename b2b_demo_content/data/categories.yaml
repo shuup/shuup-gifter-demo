@@ -1,0 +1,21 @@
+kitchen:
+    name:
+        en: Kitchen
+electronics:
+    name:
+        en: Electronics
+textiles:
+    name:
+        en: Textiles
+leisure:
+    name:
+        en: Leisure
+outdoors:
+    name:
+        en: Outdoors
+packaging:
+    name:
+        en: Packaging
+office:
+    name:
+        en: Office

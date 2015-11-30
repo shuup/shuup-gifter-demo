@@ -1,0 +1,160 @@
+{% extends "shoop/front/base.jinja" %}
+
+{% if product.is_variation_parent()  %}
+    {% set priceinfo = product.get_cheapest_child_price_info(request) %}
+{% else %}
+    {% set priceinfo = product.get_price_info(request) %}
+{% endif %}
+
+{% block extrameta %}
+    <meta property="og:site_name" content="{{ request.shop }}">
+    <meta property="og:type" content="product">
+    <meta property="og:url" content="{{ shoop.urls.model_url(product, absolute=True) }}">
+    <meta property="og:title" content="{{ product.name }}">
+    {% if primary_image %}
+        <meta property="og:image" content="{{ request.build_absolute_uri(primary_image.url) }}">
+    {% endif %}
+{% endblock %}
+
+{% block title %}{{ product.name }}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block page_class %}product-detail{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">{% trans %}Home{% endtrans %}</a></li>
+        <li><a href="{{ url('shoop:xtheme_extra_view', view='products') }}">{% trans %}Products{% endtrans %}</a></li>
+        <li class="active">{{ product.name }}</li>
+    </ol>
+{% endblock %}
+
+{% block content_full %}
+    <div class="container-fluid">
+        <div class="row product-main">
+            <div class="col-sm-6 col-sm-push-6">
+                <div class="product-image">
+                    {% include "shoop/front/product/_product_image.jinja" %}
+                </div>
+            </div>
+            <div class="col-sm-6 col-sm-pull-6">
+                <div class="product-info">
+                    <h1>{{ product.name }}</h1>
+                    {% if product.description %}
+                        <div class="description">
+                            {{ product.description|markdown|safe }}
+                        </div>
+                    {% endif %}
+                    {# TODO: Discounts based on quantity
+                    <hr>
+                    <p><strong>{% trans %}Pricing{% endtrans %}</strong></p>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>{% trans %}Qty{% endtrans %}</th>
+                            <td>10 pcs</td>
+                            <td>25 pcs</td>
+                            <td>50 pcs</td>
+                            <td>100 pcs</td>
+                        </tr>
+                        <tr>
+                            TODO: Add real calculations of discounts (don't show percentage)
+                            <th>{% trans %}Unit Price{% endtrans %}</th>
+                            <td>€10.0 (-0%)</td>
+                            <td>€9.5 (-5%)</td>
+                            <td>€9.0 (-10%)</td>
+                            <td>€8.5 (-15%)</td>
+                        </tr>
+                    </table>
+                    #}
+                    <hr>
+                    {% include "shoop/front/product/_detail_order_section.jinja" with context %}
+                </div>
+                <div class="product-tabs" role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="active" role="presentation"><a href="#tab1" aria-controls="tab1" role="tab" data-toggle="tab">{% trans %}Details{% endtrans %}</a></li>
+                        {% if shoop.product.get_visible_attributes(product) %}
+                            <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab">{% trans %}Attributes{% endtrans %}</a></li>
+                        {% endif %}
+                    </ul>
+
+                    <div class="tab-content">
+                        <div role="tabpanel" class="product-attributes tab-pane fade in active" id="tab1">
+                            {% include "shoop/front/product/_detail_details_section.jinja" %}
+                        </div>
+                        {% if shoop.product.get_visible_attributes(product) %}
+                            <div role="tabpanel" class="product-attributes tab-pane fade" id="tab2">
+                                {% include "shoop/front/product/_detail_attributes_section.jinja" %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if package_children %}
+            <hr>
+            <h2 class="section-title">{% trans %}Includes these products{% endtrans %}</h2>
+            <div class="product-carousel">
+                {% for child in package_children %}
+                    <div class="col-sm-4 col-md-3">
+                        {{ macros.product_box(child) }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% elif package_parents %}
+            <hr>
+            <h2 class="section-title">{% trans %}Is also available in{% endtrans %}</h2>
+            <div class="product-carousel">
+                {% for parent in package_parents %}
+                    <div class="col-sm-4 col-md-3">
+                        {{ macros.product_box(parent) }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    {{ macros.render_cross_sell_products(
+        product, relation_type="related", title=_("Related products")
+    ) }}
+
+    {{ macros.render_cross_sell_products(
+        product, relation_type="recommended", title=_("We recommend these products")
+    ) }}
+
+    {{ macros.render_cross_sell_products(
+        product, relation_type="computed", title=_("Users who bought this product also bought")
+    ) }}
+
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function() {
+            $("form.add-to-basket").on("submit", function(e) {
+                var cover = $(".cart-indicator");
+                e.preventDefault();
+                cover.addClass("in"); // Show fullscreen modal and a loader icon
+                $.ajax({
+                    url: $(this).attr("action"),
+                    method: "POST",
+                    data: $(this).serializeArray(),
+                    success: function(response) {
+                        //Update the shopping cart and possible other partials
+                        for(var partial in response.partials){
+                            $(partial).html(response.partials[partial]);
+                        }
+                        cover.addClass('success');
+                        setTimeout(function() {
+                            cover.removeClass("success in"); // Hide the modal
+                        }, 2500);
+                    },
+                    error: function() {
+                        cover.addClass('error');
+                        setTimeout(function() {
+                            cover.removeClass("error in"); // change to error message
+                        }, 2500);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

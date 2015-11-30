@@ -1,0 +1,22 @@
+<div id="product_{{ product.id }}" class="product-carousel carousel" data-ride="carousel" data-interval="false">
+    <div class="carousel-inner">
+        {% for product_image in images %}
+            <div class="item{% if product_image == primary_image %} active{% endif %}">
+                <img src="{{ product_image|thumbnail(size=(900, 900), crop="smart", upscale=True) }}" alt="{{ product.name }}">
+            </div>
+        {% else %}
+            <div class="item active">
+                <img class="img-responsive no-image" alt="{{ product.name }}" src="{{ STATIC_URL }}gifter/img/no_image.png">
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="carousel-thumbnails clearfix">
+    {% for product_image in images %}
+        {% if loop|count > 1 %}
+            <a href="#product_{{ product.id }}" class="col-xs-4 col-sm-3" data-slide-to="{{ loop.index0 }}">
+                <img src="{{ product_image|thumbnail(size=(200, 200), crop="smart", upscale=True)}}" alt="{{ product.name }}">
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>

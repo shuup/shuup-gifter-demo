@@ -1,0 +1,164 @@
+.frontpage {
+    padding: 10px 0px;
+    margin-bottom: 0 !important;
+
+    .frontpage-row {
+        .clearfix;
+        padding: 0px 10px;
+        div[class*="col-md-"] {
+            .clearfix;
+            @media (min-width: @screen-md-min) {
+                padding: 0px;
+            }
+        }
+    }
+
+    .block {
+        height: 32rem;
+        width: 100%;
+        float: left;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        display: block;
+        text-decoration: none;
+        @media (max-width: @screen-sm-max) {
+            height: auto;
+            margin-bottom: 30px;
+            &.image { height: 32rem; }
+        }
+        @media (min-width: @screen-md-min) {
+            padding: 10px;
+        }
+        &.double-height {
+            height: 64rem;
+            @media (max-width: @screen-sm-max) {
+                height: auto;
+                &.image { height: 40rem; }
+            }
+        }
+        &.half {
+            @media (min-width: @screen-md-min) {
+                width: 50%;
+            }
+        }
+        &.color-white .block-bg {
+            background-color: #fff;
+        }
+        &.color-gray .block-bg {
+            background-color: @body-bg-color;
+        }
+    }
+
+    .block-text {
+        z-index: 10;
+        color: @text-color;
+        position: relative;
+
+        @media (min-width: @screen-md-min) {
+            position: relative;
+            display: table;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+        }
+        .text-wrap {
+            padding: 15px;
+            @media (min-width: @screen-md-min) {
+                display: table-cell;
+                vertical-align: middle;
+                padding: 15px;
+            }
+            @media (min-width: @screen-lg-min) {
+                padding: 30px;
+            }
+        }
+
+        h1 {
+            font-weight: 700;
+            color: @brand-primary;
+            margin-top: 0;
+            @media (min-width: @screen-md-min) {
+                font-size: 4.2rem;
+            }
+        }
+
+        h2 {
+            color: @brand-primary;
+            font-weight: 300;
+            margin-top: 0;
+            font-size: 2.6rem;
+            margin-bottom: 0;
+            @media (min-width: @screen-md-min) {
+                font-size: 3.6rem;
+                margin-bottom: 10px;
+            }
+        }
+        p {
+            font-weight: 300;
+            @media (min-width: @screen-md-min) {
+                font-size: 1.8rem;
+            }
+            &:last-child { margin-bottom: 0; }
+        }
+    }
+
+    .image {
+        .block-bg {
+            background-image: url("../../../static/img/stock/1.jpg");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: 50%;
+        }
+        .block-text {
+            background: fade(@brand-secondary, 80%);
+            color: #fff;
+            @media (max-width: @screen-sm-max) {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
+            @media (min-width: @screen-md-min) {
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s;
+                .text-wrap {
+                    transition: all 0.3s;
+                    transform: translate3d(0, -50px, 0);
+                }
+            }
+        }
+        @media (min-width: @screen-md-min) {
+            &:hover {
+                .block-text {
+                    opacity: 1;
+                    visibility: visible;
+                    .text-wrap {
+                        transform: translate3d(0, 0, 0);
+                    }
+                }
+            }
+        }
+    }
+
+    div[class*="color-"] .text-wrap {
+        @media (max-width: @screen-sm-max) {
+            padding: 30px 15px;
+        }
+    }
+
+    .block-bg {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        bottom: 0px;
+        right: 0px;
+        @media (min-width: @screen-md-min) {
+            top: 10px;
+            left: 10px;
+            bottom: 10px;
+            right: 10px;
+        }
+    }
+}

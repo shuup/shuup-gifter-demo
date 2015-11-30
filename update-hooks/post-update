@@ -1,0 +1,6 @@
+export NODE_ENV=production
+pip install -r requirements.txt
+(cd gifter && npm run build)
+(cd shoop && npm run build)
+django-admin migrate --noinput
+django-admin collectstatic --noinput

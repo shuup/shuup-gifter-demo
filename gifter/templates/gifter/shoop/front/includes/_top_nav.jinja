@@ -1,0 +1,46 @@
+<nav class="navbar navbar-fixed-top top-nav" role="navigation">
+    <button class="toggle-side-nav">
+        <span class="sr-only">Menu</span>
+        <span class="hamburger"></span>
+    </button>
+    <div class="logo">
+        <a href="/"><img src="{{ STATIC_URL }}gifter/img/logo.png" class="desktop" alt="{{ request.shop }}"></a>
+    </div>
+    <ul class="actions">
+        {% if user.is_authenticated() %}
+            <li class="dropdown">
+                <button class="dropdown-toggle user-menu-button" data-toggle="dropdown">
+                    <i class="fa fa-user"></i>
+                    <span class="text hidden-xs">
+                        {% if user.first_name %}
+                            {{ user.get_full_name()|truncate(12, true) }}
+                        {% else %}
+                            {{ (""~user)|truncate(12, true) }}
+                        {% endif %}
+                    </span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="{{ url("shoop:customer_edit") }}"><i class="fa fa-user"></i> {% trans %}User account{% endtrans %}</a></li>
+                    {% if user.is_superuser %}
+                        <li><a href="/sa/"><i class="fa fa-dashboard"></i> {% trans %}Admin Dashboard{% endtrans %}</a></li>
+                    {% endif %}
+                    {% if shoop.urls.has_url("shoop:personal-orders") %}
+                        <li>
+                            <a href="{{ url("shoop:personal-orders") }}">
+                                <i class="fa fa-list-alt"></i>
+                                {% trans %}My orders{% endtrans %}
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="divider"></li>
+                    <li><a href="{{ url("shoop:logout") }}"><i class="fa fa-sign-out"></i> {% trans %}Log out{% endtrans %}</a></li>
+                </ul>
+            </li>
+        {% else %}
+            <li><a href="{{ url("shoop:login") }}"><i class="fa fa-user"></i> <span class="hidden-xs">{% trans %}Log in{% endtrans %}</span></a></li>
+        {% endif %}
+        <li id="navigation-basket-partial">
+            {% include "navigation_basket_partial.jinja" with context %}
+        </li>
+    </ul>
+</nav>

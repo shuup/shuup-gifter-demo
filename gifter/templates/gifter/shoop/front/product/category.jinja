@@ -1,0 +1,46 @@
+{% extends "shoop/front/base.jinja" %}
+
+{% block title %}{{ category.name }}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block page_class %}category{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">{% trans %}Home{% endtrans %}</a></li>
+        {% for c in category.get_ancestors() if c.is_visible(customer=request.customer) %}
+            <li><a href="{{ shoop.urls.model_url(c) }}">{{ c.name }}</a></li>
+        {% endfor %}
+        <li class="active">{{ category.name }}</li>
+    </ol>
+{% endblock %}
+
+{% block content_full %}
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>{{ category.name }}</h1>
+        </div>
+        <form role="form" class="form-inline" method="get" action="" id="sorter">
+            <div class="form-group selectpicker">
+                {{ form.sort|safe }}
+            </div>
+        </form>
+        <hr>
+        <div class="product-list row">
+            {% for product in products if shoop.product.is_visible(product) %}
+                <div class="single-product">
+                    {{ macros.product_box(product) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        $(function() {
+            $("#sorter :input").change(function() {
+                $("#sorter").submit();
+            });
+        });
+    </script>
+{% endblock %}

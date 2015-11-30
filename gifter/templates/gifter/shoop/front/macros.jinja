@@ -1,0 +1,305 @@
+{% macro product_box(product, show_image=True, class="product-box", thumbnail_size=(600,600), shop=None) %}
+    {% set u = url("shoop:product", pk=product.pk, slug=product.slug) %}
+    {% set cat_name = product.get_shop_instance(1).categories.first().name %}
+    {% set themes = ['rain', 'summer', 'office'] %}
+    {% if product.is_variation_parent()  %}
+        {% set price_info = product.get_cheapest_child_price_info(request) %}
+    {% else %}
+        {% set price_info = product.get_price_info(request) %}
+    {% endif %}
+    <a class="{{ class }}" href="{{ u }}" rel="product-detail" id="product-{{ product.id }}" data-cat="{{ cat_name|lower }}" data-theme="{{ themes|random() }}" data-price="{{ price_info.base_price.value|round(2) }}">
+        {% if price_info.is_discounted %}
+            <div class="labels">
+                <span class="label label-danger">{{ -price_info.discount_rate|percent }}</span>
+            </div>
+        {% endif %}
+        {% if show_image %}
+            <div class="product-image">
+                {% if product.primary_image %}
+                    <img alt="{{ product.name }}" src="{{ product.primary_image|thumbnail(size=thumbnail_size, crop='smart', upscale=True) }}" class="primary-image">
+                {% else %}
+                    <img class="no-image" alt="{{ product.name }}" src="{{ STATIC_URL }}gifter/img/no_image.png">
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="caption">
+            <p class="name">{{ product.name }}</p>
+            <p class="price">
+                {{ render_product_price(product, price_info, show_units=True) }}
+            </p>
+        </div>
+    </a>
+{% endmacro %}
+
+{% macro render_product_price(product, price_info, show_units=True) %}
+<div class="price-line">
+    {% if product.is_variation_parent() %}
+        {% set min_price, max_price = product.get_child_price_range(request) %}
+        {% if min_price == max_price %}
+            <strong>{{ min_price|money if min_price else "" }}</strong>
+        {% else %}
+            <strong>{{ min_price|money }} - {{ max_price|money }}</strong>
+        {% endif %}
+    {% else %}
+        {% if price_info.is_discounted %}
+            <small class="text-muted"><s>{{ price_info.base_price|money }}</s></small>
+        {% endif %}
+        <strong>{{ price_info.price|money }}</strong>
+    {% endif %}
+    {% if show_units %}
+    <small> / {{ product.sales_unit.short_name }}</small>
+    {% endif %}
+</div>
+{% endmacro %}
+
+
+{% macro render_cross_sell_products(product, relation_type="", title="") %}
+    {%- set cross_sell_products = shoop.product.get_product_cross_sells(product, relation_type) %}
+    {% if cross_sell_products %}
+        <hr>
+        {% if title %}<h3>{{ title }}</h3>{% endif %}
+        <div class="row">
+            {% for product in cross_sell_products %}
+                <div class="col-sm-4 col-md-3">
+                    {{ product_box(product) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_field(field, classes="") %}
+    {% if field.field.widget.is_hidden %}
+        {{ field.as_widget()|safe }}
+    {% else %}
+        {% set widget_name = field.field.widget.__class__.__name__|lower %}
+        {% if widget_name == "checkboxinput" %}
+            <div class="custom-checkbox {{ widget_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %} {{ classes }}">
+                {{ field.as_widget()|safe }}
+                <label for="{{ field.auto_id }}">
+                    {{ field.label }}
+                </label>
+            </div>
+        {% elif widget_name == "select" %}
+            <div class="form-group {{ widget_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %} {{ classes }}">
+                <label for="{{ field.auto_id }}" class="control-label">{{ field.label }}</label>
+                {{ field.as_widget(attrs={"class": "form-control selectpicker"})|safe }}
+                {% if field.help_text %}
+                    <p class="help-block">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                    <p class="help-block">
+                        {% for error in field.errors %}
+                            {{ error}}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="form-group {{ widget_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %} {{ classes }}">
+                <label class="control-label" for="{{ field.auto_id }}">{{ field.label }}</label>
+                {{ field.as_widget(attrs={"class": "form-control"})|safe }}
+                {% if field.help_text %}
+                    <p class="help-block">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                    <p class="help-block">
+                        {% for error in field.errors %}
+                            {{ error}}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_order_field(field, classes="") %}
+    {% if field.field.widget.is_hidden %}
+        {{ field.as_widget()|safe }}
+    {% else %}
+        {% set widget_name = field.field.widget.__class__.__name__|lower %}
+        {% if widget_name == "checkboxinput" %}
+            <div class="custom-checkbox {{ widget_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %} {{ classes }}">
+                {{ field.as_widget()|safe }}
+                <label for="{{ field.auto_id }}">
+                    {{ field.label }}
+                </label>
+            </div>
+        {% elif widget_name == "lazyselect" or widget_name == "select" %}
+            <div class="form-group {{ widget_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %} {{ classes }}">
+                <label for="{{ field.auto_id }}" class="col-sm-2 control-label">{{ field.label }}</label>
+                <div class="col-sm-10">
+                    {% if widget_name == "lazyselect" %}
+                        {{ field.as_widget(attrs={"class": "form-control selectpicker", "data-live-search": "true"})|safe }}
+                    {% else %}
+                        {{ field.as_widget(attrs={"class": "form-control selectpicker"})|safe }}
+                    {% endif %}
+                    {% if field.help_text %}
+                        <p class="help-block">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        <p class="help-block">
+                            {% for error in field.errors %}
+                                {{ error}}
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="form-group {{ widget_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-error{% endif %} {{ classes }}">
+                <label for="{{ field.auto_id }}" class="col-sm-2 control-label">{{ field.label }}</label>
+                <div class="col-sm-10">
+                    {{ field.as_widget(attrs={"class": "form-control"})|safe }}
+                    {% if field.help_text %}
+                        <p class="help-block">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% if field.errors %}
+                        <p class="help-block">
+                            {% for error in field.errors %}
+                                {{ error}}
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{% macro alert(message, title=None, mode="") %}
+    <div class="alert{% if mode %} alert-{{ mode }}{% endif %}">
+        {% if title %}
+            <strong>{{ title }}</strong>
+        {% endif %}
+        {% if not caller %}
+            {{ message|safe }}
+        {% else %}
+            {{ caller() }}
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro order_list(orders) %}
+    {% if orders %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{% trans %}Order{% endtrans %}</th>
+                    <th>{% trans %}Ordered{% endtrans %}</th>
+                    <th>{% trans %}Status{% endtrans %}</th>
+                    <th class="text-right">{% trans %}Total{% endtrans %}</th>
+                    <th>{% trans %}Operations{% endtrans %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.reference_number }}</td>
+                        <td>{{ order.order_date|localtime|date("j.n.Y H:i") }}</td>
+                        <td>{{ order.get_status_display() }}</td>
+                        <td class="text-right">{{ order.total_price|money }}</td>
+                        <td><a href="{{ url("customer_order", pk=order.id) }}" class="btn btn-default btn-sm">{% trans %}View{% endtrans %}</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>{% trans %}No orders{% endtrans %}</p>
+    {% endif %}
+{% endmacro %}
+
+{% macro print_order_detail(order, show_attachments=False) %}
+
+    <h3>{% trans %}Products ordered{% endtrans %}</h3>
+    {% set lines = order.lines.order_by("ordering") %}
+    <div class="well">
+        <div class="table-responsive">
+            {% include "shoop/front/order/partials/product_table.jinja" %}
+        </div>
+    </div>
+
+    <h3>{% trans %}Tax breakdown{% endtrans %}</h3>
+    <div class="well">
+        <div class="table-responsive">
+            {% include "shoop/front/order/partials/taxes.jinja" %}
+        </div>
+    </div>
+
+    {% if show_attachments %}
+        {% set attachments = order.get_purchased_attachments() %}
+        {% if attachments %}
+            <h3>{% trans %}Files{% endtrans %}</h3>
+            <div class="well">
+                <table class="table">
+                    {% for attachment in attachments %}
+                        <tr>
+                            <td><a href="{{ attachment.get_effective_url() }}">{{ attachment.title }}</a></td>
+                            <td>
+                                {% if attachment.description %}
+                                    {{ attachment.description|linebreaksbr }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md-6">
+            <h3>{% trans %}Delivery{% endtrans %}</h3>
+            <div class="well">
+                <dl class="dl-horizontal">
+                    <dt>{% trans %}Delivery method{% endtrans %}:</dt>
+                    <dd>{{ order.shipping_method_name }}</dd>
+                    <dt>{% trans %}Shipping address{% endtrans %}:</dt>
+                    <dd>
+                        <address>
+                            {% for line in order.shipping_address.as_string_list() %}
+                                {% if loop.first %}
+                                    <strong>{{ line }}</strong>
+                                {% else %}
+                                    {{ line }}
+                                {% endif %}
+                                {% if not loop.last %}<br>{% endif %}
+                            {% endfor %}
+                        </address>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <h3>{% trans %}Payment{% endtrans %}</h3>
+            <div class="well">
+                <dl class="dl-horizontal">
+                    <dt>{% trans %}Payment method{% endtrans %}:</dt>
+                    <dd>{{ order.payment_method_name }}</dd>
+                    <dt>{% trans %}Billing address{% endtrans %}:</dt>
+                    <dd>
+                        <address>
+                            {% for line in order.billing_address.as_string_list() %}
+                                {% if loop.first %}
+                                    <strong>{{ line }}</strong>
+                                {% else %}
+                                    {{ line }}
+                                {% endif %}
+                                {% if not loop.last %}<br>{% endif %}
+                            {% endfor %}
+                        </address>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    {% if order.company %}
+        <h3>{% trans %}Company{% endtrans %}</h3>
+        <div class="well">
+            <p>{{ order.company.name }} ({% trans %}Y-tunnus{% endtrans %} {{ order.company.vat_id }})</p>
+        </div>
+    {% endif %}
+
+{% endmacro %}

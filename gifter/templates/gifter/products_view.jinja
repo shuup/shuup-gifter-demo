@@ -1,0 +1,115 @@
+{% extends "shoop/front/base.jinja" %}
+
+{% block title %}{% trans %}Products{% endtrans %}{% endblock %}
+{% block content_title %}{% endblock %}
+{% block page_class %}products{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="/">{% trans %}Home{% endtrans %}</a></li>
+        <li>{% trans %}Products{% endtrans %}</li>
+    </ol>
+{% endblock %}
+
+{% block content_full %}
+    <div class="container-fluid">
+        <div class="page-header">
+            <h1>{% trans %}Products{% endtrans %}</h1>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="cat-select">Category</label>
+                    <select name="cat-select" id="cat-select" class="selectpicker form-control filter">
+                        <option value="0">---</option>
+                        {% for category in categories %}
+                            <option value="{{ category.name|lower }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="theme-select">Theme</label>
+                    <select name="theme-select" id="theme-select" class="selectpicker form-control filter">
+                        <option value="0">---</option>
+                        {% for theme in ['Rain', 'Summer', 'Office'] %}
+                            <option value="{{ theme|lower }}">{{ theme }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="price-select">Price Max</label>
+                    <select name="price-select" id="price-select" class="selectpicker form-control filter">
+                        <option value="0">---</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="product-list row">
+            {% for product in products if shoop.product.is_visible(product) %}
+                <div class="single-product">
+                    {{ macros.product_box(product) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+
+        $(function() {
+            $("#sorter :input").change(function() {
+                $("#sorter").submit();
+            });
+        });
+        var cat_visible = true;
+        var theme_visible = true;
+        var price_visible = true;
+
+
+        $(".filter").on("change", function(){
+            var target = $(this).attr("name").split("-")[0];
+            var val = $(this).val();
+
+            var cat_value = $("#cat-select").val();
+            var theme_value = $("#theme-select").val();
+            var price_value = $("#price-select").val();
+
+            $(".product-box").each(function(idx, elem){
+                var box_cat_value = $(elem).data("cat");
+                var box_theme_value = $(elem).data("theme");
+                var box_price_value = $(elem).data("price");
+                var show_elem = true;
+
+                if(cat_value != 0 && box_cat_value != cat_value)
+                    show_elem = false;
+
+                if(theme_value != 0 && box_theme_value != theme_value)
+                    show_elem = false;
+
+                if(price_value != 0 && parseFloat(box_price_value) > parseFloat(price_value))
+                    show_elem = false;
+
+                var parent = $(elem).closest("div");
+                if(show_elem) {
+                    if(!$(parent).is(":visible"))
+                        $(parent).fadeIn();
+                }
+                else {
+                    $(elem).closest("div").fadeOut();
+                }
+            });
+        });
+
+    </script>
+{% endblock %}

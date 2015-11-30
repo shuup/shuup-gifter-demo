@@ -1,0 +1,14 @@
+<div class="side-nav">
+    <div class="vertical-wrapper">
+        <ul class="nav">
+            <li><a href="/">{% trans %}Home{% endtrans %}</a></li>
+            {% set products_url = url('shoop:xtheme_extra_view', view='products') %}
+            <li{% if request.path == products_url %} class="current"{% endif %}><a href="{{ products_url }}">{% trans %}Products{% endtrans %}</a></li>
+            {% if shoop.simple_cms %}
+                {% for link in xtheme.get_cms_navigation_links() %}
+                    <li{% if request.path == "%s/" % link.url %} class="current"{% endif %}><a href="{{ link.url }}">{{ link.text }}</a></li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
+</div>

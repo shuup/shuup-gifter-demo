@@ -1,0 +1,41 @@
+<footer>
+    <div class="container-fluid">
+        <div class="links">
+            <ul>
+                {% set privacy_policy_page = shoop.simple_cms.get_page_by_identifier("privacy-policy") %}
+                {% if privacy_policy_page %}
+                    <li>
+                        <a href="{{ url("shoop:cms_page", url=privacy_policy_page.url) }}">
+                            {{ privacy_policy_page }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% set terms_page = shoop.simple_cms.get_page_by_identifier("terms-and-conditions") %}
+                {% if terms_page %}
+                    <li>
+                        <a href="{{ url("shoop:cms_page", url=terms_page.url) }}">
+                            {{ terms_page }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% set license_page = shoop.simple_cms.get_page_by_identifier("image-licenses") %}
+                {% if license_page %}
+                    <li>
+                        <a href="{{ url("shoop:cms_page", url=license_page.url) }}">
+                            {{ license_page }}
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="payment-methods">
+            <ul>
+                <li class="hidden-xs">{% trans %}Payment Methods{% endtrans %}</li>
+                <li><i class="fa fa-cc-mastercard"></i></li>
+                <li><i class="fa fa-cc-visa"></i></li>
+                <li><i class="fa fa-cc-paypal"></i></li>
+                <li><i class="fa fa-cc-stripe"></i></li>
+            </ul>
+        </div>
+    </div>
+</footer>

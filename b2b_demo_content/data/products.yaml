@@ -1,0 +1,238 @@
+KITBKSS:
+    category_identifier: kitchen
+    image: knife-1.jpg
+    price: 28.99
+    name:
+        en: Bread Knife - Stainless Steel
+    description:
+        en: |
+            No more cutting soft bread and crushing it. With this stainless
+            steel bread knife you will be able to cut any kind of bread into
+            slices and enjoy it right away. This knife makes a difference!
+KITCKSS:
+    category_identifier: kitchen
+    image: knife-2.jpg
+    price: 54.99
+    discount_price: 33.33
+    name:
+        en: Chef's Knife - Stainless Steel
+    description:
+        en: |
+            Chef's knife is the cutting tool which you can't cook without. It is a
+            must have in food preparation.
+KITUKSS:
+    category_identifier: kitchen
+    image: knife-3.jpg
+    price: 39.99
+    discount_price: 19.99
+    name:
+        en: Utility Knife - Stainless Steel
+    description:
+        en: |
+            Every chef needs this type of utility knife. It lasts for years and is
+            amazingly versatile in the kitchen. The handle fits perfectly and
+            design is sleek.
+KITPKSS:
+    category_identifier: kitchen
+    image: knife-4.jpg
+    price: 22.99
+    name:
+        en: Paring Knife - Stainless Steel
+    description:
+        en: |
+            Small paring knife made of stainless steel is extrememly versatile
+            in kitchen. Peeling and chopping fruits and vegetables has never
+            been this easy.
+KITTKSS:
+    category_identifier: kitchen
+    image: knife-5.jpg
+    price: 20.99
+    name:
+        en: Trimmer Knife - Stainless Steel
+    description:
+        en: |
+            Sleek and stylish trimmer knife made of stainless steel with
+            beautifully handcrafted handle.
+KITCMMC:
+    category_identifier: kitchen
+    image: mugs-colored.jpg
+    price: 9.99
+    name:
+        en: Coffee Mug - Multiple colors
+    description:
+        en: |
+            Perfect colourful porcelain mugs to provide you that summer
+            feeling or cheer up on an autumn evening. The mugs are available
+            in orange, green and blue.
+KITCMW:
+    category_identifier: kitchen
+    image: mug-white.jpg
+    price: 12.29
+    name:
+        en: White Ceramic Coffee Cup
+    description:
+        en: |
+            Classic white ceramic cup with a large handle. This cup is perfect
+            for your big morning coffee. It feels comfortable on any size of
+            hands.
+ELEBAFL:
+    category_identifier: electronics
+    image: flashlight.jpg
+    price: 29.29
+    name:
+        en: Black Aluminium Flashlight
+    description:
+        en: |
+            A stylish flashlight with a long range. Amazingly lightweight and
+            resistant because of its aluminium surface.
+ELEABL:
+    category_identifier: electronics
+    image: speaker.jpg
+    price: 29.29
+    name:
+        en: Aluminium Bluetooth Loudspeaker
+    description:
+        en: |
+            Bring the party vibe with you and listen to music everywhere with
+            this little portable loudspeaker. It is light to carry and has a
+            cool light blue design. Works with USB stick as well.
+TEXWBT:
+    category_identifier: textiles
+    image: towel.jpg
+    price: 39.49
+    discount_price: 16.66
+    name:
+        en: White Bathing Towel
+    description:
+        en: |
+            The white luxurious bathing towel is made of super smooth 100%
+            cotton. Perfect fit to get that spa feeling at your own home. The
+            towel maintains its softness wash after wash because of its high
+            quality.
+LEIPGB:
+    category_identifier: leisure
+    image: golf-ball.jpg
+    price: 4.99
+    name:
+        en: Premium Golf Ball
+    description:
+        en: |
+            High level of control for all shot types. This high quality golf
+            ball gives your shot the distance you crave for and performs
+            perfectly on approach shots as well.
+OUTAWCU:
+    category_identifier: outdoors
+    image: umbrella.jpg
+    price: 44.99
+    name:
+        en: All-Weather Classical Umbrella
+    description:
+        en: |
+            With this classical black umbrella it is possible to look good
+            even in the extreme weather conditions. It has a stylish black
+            design and a wooden handle. You no longer need to worry about your
+            brolly turning inside because of heavy wind - this umbrella can
+            take it!
+PACWCP:
+    category_identifier: packaging
+    image: cardboard-box.jpg
+    price: 2.99
+    name:
+        en: Small Cardboard Box
+    description:
+        en: |
+            White and square cardboard box with high quality texture. Ideal
+            for mailing important small items to your business partners.
+OFFMCSN:
+    category_identifier: office
+    image: sticky-notes.jpg
+    price: 4.49
+    name:
+        en: Multi-Color Sticky Notes
+    description:
+        en: |
+            The colourful sticky notes come in a package of 100 pcs with your
+            custom print. Have your company name printed on them and you have
+            the perfect swag to give away at an exhibition. Who wouldn't need
+            reminders in their everyday life? Give your customer a package of
+            these and you have a perfect way to stay in your customer's mind
+            throughout the day.
+OFFABP:
+    category_identifier: office
+    image: pen-aluminum.jpg
+    price: 11.89
+    name:
+        en: Aluminium Ballpoint Pen
+    description:
+        en: |
+            This aluminium pen with silver details is the one which
+            trendsetters choose. You can't go wrong with aluminium. It is
+            hardwearing  and looks beautiful. It works well as a business
+            present also.
+OFFPBPTB:
+    category_identifier: office
+    image: pen-blue.jpg
+    price: 5.99
+    name:
+        en: Plastic Ballpoint Pen (Transparent Blue)
+    description:
+        en: |
+            The lightness of this sleek pen makes it perfect for everyday use.
+            It has a fresh transparent blue design with silver details.
+OFFBCMP:
+    category_identifier: office
+    image: pen-chrome-black.jpg
+    price: 6.29
+    name:
+        en: Black & Chrome Marker Pen
+    description:
+        en: |
+            If you like to draw attention, this half-black half-chrome pen is
+            made for you. It is probably the coolest pen you will ever use.
+            Besides its awesome looks, it is also perfectly designed to fit
+            into your hand.
+OFFHQFP:
+    category_identifier: office
+    image: pen-ink.jpg
+    price: 10.00
+    name:
+        en: High Quality Fountain Pen
+    description:
+        en: |
+            An old school ink pen with newest design and technology. You don't
+            have to cut down on the style or the usability with this ink pen.
+            This pen has it all. It controls the ink supply perfectly and
+            looks beautiful as well.
+OFFSSBP:
+    category_identifier: office
+    image: pens-colored.jpg
+    price: 5.00
+    name:
+        en: Shiny & Sleek Ballpoint Pen
+    description:
+        en: |
+            There are two trendy color options of this sleek pen, blue and
+            yellow. These pens are the perfect way to show your positive
+            attitude to the world. Choose this product when you want to share
+            the good mood with others.
+OFFSBP:
+    category_identifier: office
+    image: pen-silver.jpg
+    price: 5.29
+    name:
+        en: Silver Ballpoint Pen
+    description:
+        en: |
+            Beautiful mat silver pen with shiny silver details. Because of its
+            classy designing, it works well as a business present. Your
+            customers will love this pen.
+OFFWMP:
+    category_identifier: office
+    image: pen-wooden.jpg
+    price: 12.99
+    name:
+        en: Wooden Marker Pen
+    description:
+        en: |
+            Elegant pen made of wooden material with silver details. Ideal as
+            a graduation present or as a fancy marker in your golf bag.

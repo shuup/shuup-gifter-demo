@@ -1,0 +1,2 @@
+-e ./shoop
+django-registration-redux==1.2
