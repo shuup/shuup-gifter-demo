@@ -5,19 +5,21 @@
 # This source code is licensed under the AGPLv3 license found in the
 # LICENSE file in the root directory of this source tree.
 from __future__ import unicode_literals
+
 import os
 
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
+from django.core.management.commands.migrate import Command as MigrateCommand
 from django.db.transaction import atomic
 from django.utils import translation
-from shoop.core.models import Shop, TaxClass, PaymentMethod
-from shoop.core.models.methods import ShippingMethod
-from shoop.core.models.products import ProductType
-from shoop.core.models.shops import ShopStatus
-from shoop.core.models.units import SalesUnit
+
+from shoop.core.models import (
+    PaymentMethod, ProductType, SalesUnit, ShippingMethod,
+    Shop, ShopStatus, TaxClass
+)
 from shoop.testing.factories import create_default_order_statuses, get_default_supplier
-from django.core.management.commands.migrate import Command as MigrateCommand
+from shoop.xtheme import set_current_theme
 
 from b2b_demo_content.importer import import_categories, import_products, import_cms_content
 
@@ -69,3 +71,4 @@ class Command(BaseCommand):
         translation.activate("en")
         self.seed_default()
         self.import_data()
+        set_current_theme("gifter")

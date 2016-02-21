@@ -30,7 +30,7 @@ INSTALLED_APPS = (
     # shoop
     'shoop.themes.classic_gray',
     'shoop.core',
-    'shoop.simple_pricing',
+    'shoop.customer_group_pricing',
     'shoop.simple_supplier',
     'shoop.default_tax',
     'shoop.front',
@@ -41,11 +41,12 @@ INSTALLED_APPS = (
     'shoop.front.apps.simple_order_notification',
     'shoop.front.apps.simple_search',
     'shoop.admin',
+    'shoop.campaigns',
+    'shoop.order_printouts',
     'shoop.testing',
     'shoop.notify',
     'shoop.simple_cms',
     'shoop.xtheme',
-    'shoop.discount_pricing',
     # external
     'bootstrap3',
     'django_jinja',
@@ -136,7 +137,7 @@ TEMPLATES = [
 ]
 
 SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
-SHOOP_PRICING_MODULE = "discount_pricing"
+SHOOP_PRICING_MODULE = "customer_group_pricing"
 SHOOP_BASKET_VIEW_SPEC = "b2b_demo.views.basket:B2bBasketView"
 DEMO_CREDENTIALS = "admin / admin"
 
