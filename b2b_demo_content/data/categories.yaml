@@ -1,21 +1,18 @@
-kitchen:
-    name:
-        en: Kitchen
-electronics:
-    name:
-        en: Electronics
-textiles:
-    name:
-        en: Textiles
-leisure:
-    name:
-        en: Leisure
-outdoors:
-    name:
-        en: Outdoors
-packaging:
-    name:
-        en: Packaging
-office:
-    name:
-        en: Office
+eyelashes:
+  name:
+    en: Eyelashes
+beauty care:
+  name:
+    en: Beauty care
+hair products:
+  name:
+    en: Hair products
+nails:
+  name:
+    en: Nails
+other:
+  name:
+    en: Other
+equipment:
+  name:
+    en: Equipment
