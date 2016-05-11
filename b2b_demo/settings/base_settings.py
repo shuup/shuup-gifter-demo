@@ -25,10 +25,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # gifter
     'b2b_demo',
-    'gifter',
     'b2b_demo_content',
     # shoop
-    'shoop.themes.classic_gray',
     'shoop.core',
     'shoop.customer_group_pricing',
     'shoop.simple_supplier',
