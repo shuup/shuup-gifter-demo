@@ -10,6 +10,8 @@ import csv
 import datetime
 import decimal
 import glob
+import random
+
 import os
 from collections import defaultdict
 
@@ -246,7 +248,6 @@ def import_taxes(data_path):
     country_code = "US"
     for file in glob.glob("%s/*.csv" % data_path):
         with open(file) as fp:
-            print("processing", file)
             records = csv.DictReader(fp)
             for row in records:
                 zipcode = range_by_taxarea[row.get("TaxRegionCode")]
@@ -271,8 +272,14 @@ def import_taxes(data_path):
 
                 assert combined == rate
                 # create tax
-                name = "%s %s (%s)" % (country_code, state, city)
-                code = ("%s-%s-%s" % (country_code, state, city)).lower()
+                name = "%s (%s)" % (state, city)
+                if len(name) > 64:
+                    name = name[:63]
+                city_code = ''.join(e for e in city if e.isalnum())
+                code = ("%s-%s-%s" % (country_code, state, city_code)).lower()
+                if len(code) > 64:
+                    rnd = random.randint(1000,9999)
+                    code = "%s%d" % (code[:50], rnd)
 
                 tax, c = Tax.objects.get_or_create(code=code, defaults={
                     "name": name,
