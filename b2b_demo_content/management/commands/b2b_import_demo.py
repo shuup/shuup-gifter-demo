@@ -15,8 +15,8 @@ from django.db.transaction import atomic
 from django.utils import translation
 
 from shoop.core.models import (
-    PaymentMethod, ProductType, SalesUnit, ShippingMethod,
-    Shop, ShopStatus, TaxClass
+    CustomCarrier, CustomPaymentProcessor, PaymentMethod, ProductType,
+    SalesUnit, ShippingMethod, Shop, ShopStatus, TaxClass
 )
 from shoop.testing.factories import create_default_order_statuses, get_default_supplier
 from shoop.xtheme import set_current_theme
@@ -31,17 +31,29 @@ class Command(BaseCommand):
         migrator.handle(database="default", verbosity=1, noinput=True, app_label=None, migration_name=None)
 
         if not Shop.objects.exists():
-            Shop.objects.create(name="B2B", identifier="default", status=ShopStatus.ENABLED)
+            shop = Shop.objects.create(name="B2B", identifier="default", status=ShopStatus.ENABLED)
             try:
                 tax_class = TaxClass.objects.create(identifier="default", tax_rate=0)
             except:
                 tax_class = TaxClass.objects.create(identifier="default")
 
-            PaymentMethod.objects.create(identifier="default", name="Invoice", tax_class=tax_class)
-            PaymentMethod.objects.create(identifier="bank_xfer", name="Bank Transfer", tax_class=tax_class)
-            PaymentMethod.objects.create(identifier="cash", name="Cash (Pickup Only)", tax_class=tax_class)
-            ShippingMethod.objects.create(identifier="default", name="Post Parcel", tax_class=tax_class)
-            ShippingMethod.objects.create(identifier="pickup", name="Pickup at Helsinki Store", tax_class=tax_class)
+            custom_carrier = CustomCarrier.objects.first()
+            custom_carrier.create_service(
+                choice_identifier="manual",
+                identifier="default",
+                shop=shop,
+                enabled=True,
+                name="Post Parcel",
+                tax_class=tax_class
+            )
+            payment_processor = CustomPaymentProcessor.objects.first()
+            payment_processor.create_service(choice_identifier="manual",
+                identifier="default",
+                shop=shop,
+                enabled=True,
+                name="Invoice",
+                tax_class=tax_class
+            )
             create_default_order_statuses()
             get_default_supplier()
             ProductType.objects.create(identifier="default")
@@ -71,4 +83,4 @@ class Command(BaseCommand):
         translation.activate("en")
         self.seed_default()
         self.import_data()
-        set_current_theme("gifter")
+        set_current_theme("shoop_beauty_theme")
