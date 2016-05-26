@@ -5,22 +5,26 @@
 # This source code is licensed under the AGPLv3 license found in the
 # LICENSE file in the root directory of this source tree.
 from __future__ import unicode_literals
+
+import csv
+import datetime
+import decimal
+import glob
+import os
 from collections import defaultdict
+
+import six
+import yaml
 from django.utils.timezone import now
-from shoop.core.models import (
-    Shop, SalesUnit, TaxClass,
-    Category, CategoryStatus, CategoryVisibility,
-    Product, ProductType, ShopProduct,
-    ProductMedia, ProductMediaKind,
-)
+from shoop.core.models import (Category, CategoryStatus, CategoryVisibility,
+                               Product, ProductMedia, ProductMediaKind,
+                               ProductType, SalesUnit, Shop, ShopProduct, Tax,
+                               TaxClass)
+from shoop.default_tax.models import TaxRule
 from shoop.simple_cms.models import Page
 from shoop.testing.factories import get_default_supplier
 from shoop.utils.filer import filer_image_from_data
 from shoop.utils.numbers import parse_decimal_string
-import datetime
-import os
-import six
-import yaml
 
 
 def create_from_datum(model, identifier, content, i18n_fields=(), identifier_field="identifier"):
@@ -191,3 +195,96 @@ def import_cms_content(yaml_file):
         page.available_from = now() - datetime.timedelta(days=1)
         page.save()
         print("Page updated: %s" % page.identifier)
+
+
+def import_taxes(data_path):
+
+    def rangify(lst):
+        last = None
+        span_start = None
+        for value in lst:
+            if span_start is not None and value > last + 1:
+                yield (span_start, last)
+                span_start = None
+            if span_start is None:
+                span_start = value
+            last = value
+        yield (span_start, last)
+
+    range_by_taxarea = {}
+    for file in glob.glob("%s/*.csv" % data_path):
+        zipcodes = {}
+        taxcode_name_map = {}
+        with open(file) as fp:
+            print("processing", file)
+            records = csv.DictReader(fp)
+            for row in records:
+                taxcode = row.get("TaxRegionCode")
+                if taxcode not in zipcodes:
+                    zipcodes[taxcode] = []
+                if taxcode not in taxcode_name_map:
+                    taxcode_name_map[taxcode] = row.get("TaxRegionName")
+
+                zipcodes[taxcode].append(int(row.get("ZipCode")))
+
+        for c, z in zipcodes.items():
+            ranged = []
+            for start, stop in rangify(sorted(z)):
+                if start == stop:
+                    ranged.append(start)
+                else:
+                    ranged.append("%d-%d" % (start, stop))
+            range_by_taxarea[c] = ",".join(map(str, ranged))
+
+    TaxRule.objects.all().delete()
+    Tax.objects.all().delete()
+
+    tax_class, c = TaxClass.objects.get_or_create(identifier="us-tax", defaults={
+        "name": "US Sales Tax",
+    })
+
+    country_code = "US"
+    for file in glob.glob("%s/*.csv" % data_path):
+        with open(file) as fp:
+            print("processing", file)
+            records = csv.DictReader(fp)
+            for row in records:
+                zipcode = range_by_taxarea[row.get("TaxRegionCode")]
+                state = row.get("State")
+                city = row.get("TaxRegionName")
+
+                # rates
+                # State,ZipCode,TaxRegionName,TaxRegionCode,CombinedRate,StateRate,CountyRate,CityRate,SpecialRate
+                try:
+                    rate = decimal.Decimal(row.get("CombinedRate"))
+
+                    rate_state = decimal.Decimal(row.get("StateRate"))
+                    rate_county = decimal.Decimal(row.get("CountyRate"))
+                    rate_city = decimal.Decimal(row.get("CityRate"))
+                    rate_special = decimal.Decimal(row.get("SpecialRate"))
+
+                    combined = rate_state + rate_county + rate_city + rate_special
+                except Exception as e:
+                    print(row)
+                    print(e)
+                    return
+
+                assert combined == rate
+                # create tax
+                name = "%s %s (%s)" % (country_code, state, city)
+                code = ("%s-%s-%s" % (country_code, state, city)).lower()
+
+                tax, c = Tax.objects.get_or_create(code=code, defaults={
+                    "name": name,
+                    "rate": combined
+                })
+
+                rule, taxrule_created = TaxRule.objects.get_or_create(
+                    country_codes_pattern=country_code,
+                    region_codes_pattern=state,
+                    postal_codes_pattern=zipcode,
+                    tax=tax
+                )
+                if taxrule_created:
+                    rule.tax_classes.add(tax_class)
+                    rule.save()
