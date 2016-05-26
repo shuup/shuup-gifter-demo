@@ -23,6 +23,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # themes
+    'shoop_beauty_theme',
     # gifter
     'b2b_demo',
     'b2b_demo_content',
